@@ -1,0 +1,357 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="m_main.aspx.cs" Inherits="_777Game_mobile_m_main" %>
+
+<%@ Register Src="../music_onoff.ascx" TagName="music_onoff" TagPrefix="uc1" %>
+<%@ Register Src="../chat_room.ascx" TagName="chat_room" TagPrefix="uc2" %>
+<%@ Register Src="~/777Game/chat_room.ascx" TagPrefix="uc1" TagName="chat_room" %>
+
+
+<%@ Register Src="../chat6cn_room.ascx" TagName="chat6cn_room" TagPrefix="uc3" %>
+<%@ Register Src="~/777Game/chat_mobile.ascx" TagPrefix="uc1" TagName="chat_mobile" %>
+<%@ Register Src="~/777Game/giftsend_mobile.ascx" TagPrefix="uc1" TagName="giftsend_mobile" %>
+
+
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>水果老虎机</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="user-scalable=no, width=720px" />
+
+    <link href="/files/css/common.css" rel="stylesheet" />
+    <script src="/files/js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="/files/js/fruit_slots_mobile.js"></script>
+
+    <script type="text/javascript" src="/files/js/player.js"></script>
+    <script type="text/javascript" src="/files/js/segment-display.js"></script>
+    <script type="text/javascript" src="/files/js/jquery.jqGauges.min.js"></script>
+    <script type="text/javascript" src="/files/js/jquery.mobile-1.4.5.js"></script>
+    <script src="/files/js/jquery.cookie.js"></script>
+    <script src="/files/js/common.js"></script>
+   <%-- <script type="text/javascript" src="http://p.jwpcdn.com/6/10/jwplayer.js"></script>--%>
+    <script type="text/javascript" src="//player.wowza.com/player/latest/wowzaplayer.min.js"></script>
+    <script src="node_modules/phaser/dist/phaser.min.js"></script>
+
+
+
+    <style type="text/css">
+        * {
+            font-size: 12px;
+            font-family: 宋体;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        .GridPager a, .GridPager span {
+            margin: 5px 5px 5px 5px;
+            display: block;
+            height: 30px;
+            width: 25px;
+            font-weight: bold;
+            font-size: 22px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .GridPager a {
+            background-color: violet;
+            color: black;
+            border: 1px solid violet;
+        }
+
+        .GridPager span {
+            background-color: #A1DCF2;
+            color: #000;
+            border: 1px solid #3AC0F2;
+        }
+
+
+         /*.splinning { 
+        	width:1950px;
+        	height:1080px;
+	        -ms-transform: scale(0.5);
+		    -moz-transform: scale(0.5);
+		    -o-transform: scale(0.5);
+		    -webkit-transform: scale(0.5);
+		    transform: scale(0.5);
+		
+		    -ms-transform-origin: 200 100;
+		    -moz-transform-origin: 200 100;
+		    -o-transform-origin: 200 100;
+		    -webkit-transform-origin: 200 100;
+		    transform-origin: 200 100;
+
+		 }*/
+
+    </style>
+    <script type="text/javascript">
+        //window.addEventListener('load', function () { setTimeout(scrollTo, 0, 0, 1); }, false);
+        setTimeout(function () {
+            if (window.pageYOffset <= 0 && isUserTouched === false) {
+                window.scrollTo(0, 1);
+            }
+        }, 400);
+
+        var bet_item_rate = [120, 40, 30, 20, 20, 15, 10, 5];
+        var dice_rate = 1.98;
+        var bg_sound_state = 1;
+        var eff_sound_state = 1;
+        var zhubo_sound_state = 1;
+
+        var user_id = '<%= Session["user_id"] %>';
+        var username = '<%= Session["User"] %>';
+        var usercoin = '<%= Session["coin"] %>';
+        usercoin = usercoin + 1 - 1;
+        var zhibo_id = '<%= Session["zhibo_id"] %>';
+        zhibo_id = parseInt(zhibo_id);
+        zhibo_id = 15;
+
+        PostAjax("/Ajax/loginstate.ashx", "category=2&user_id=" + user_id + "&loginfir=" + 1);
+        setInterval(function () {
+            PostAjax("/Ajax/loginstate.ashx", "category=2&user_id=" + user_id);
+        }, 5 * 60 * 1000);
+
+        var room = 1;
+        PostAjax("/Ajax/tvroom_manager.ashx", "user_id=" + user_id + "&room=" + room + "&state=0");
+        $(window).on("beforeunload", function () {
+            PostAjax("/Ajax/tvroom_manager.ashx", "user_id=" + user_id + "&room=" + room + "&state=1");
+            return "Buy now!!!";
+        });
+        
+    </script>
+</head>
+<body>
+    <div>
+        <form id="form1" runat="server">
+            <asp:HiddenField ID="HiddenField1" runat="server" Value="0" />
+            <script>
+                if (jQuery("#HiddenField1").val() == "1") {
+                    document.getElementById("total_log_area").style.display = 'block';
+                }
+            </script>
+
+            <%--<div id="streamplay" style="width: 720px; height: 400px; left: 0px; top: 0px;">--%>
+            <div id='wowza_player' style='width: 720px; height: 400px; left: 0px; top: 0px;'></div>
+            <%--<script id='player_embed' src='//player.cloud.wowza.com/hosted/t9hp0wfl/wowza.js' type='text/javascript'></script>--%>
+            <% utility.LivePlayer(Response); %>
+            </div>   
+             
+            <div id="play" class="game_main_mobile"></div>
+
+            <div id="total_log_area" style="width: 720px; height: 1190px; position: absolute; left: 0px; top: 0px; background-image: url(/files/image/images_m/log_area.png); display: none">
+                <!--페이징처리구현-->
+                <img id="closebtn" src="../../files/image/images_m/close_btn1.png" style="position: absolute; left: 607px; top: 113px;" />
+                <ul id='total_log' class='total_log' style="width: 560px; height: 620px; position: absolute; left: 80px; top: 200px; margin: 11px; margin-left: 20px; overflow-y: hidden">
+                    <asp:GridView ID="GridView1" runat="server" DataSourceID="SqlDataSource1" AllowPaging="True" AutoGenerateColumns="False" ShowHeader="False" Width="100%" PageSize="4">
+                        <Columns>
+                            <asp:TemplateField>
+                                <ItemTemplate>
+                                    <div style="font-size: 22px; color: lime">
+                                        <asp:Label ID="Label1" runat="server" Text='<%# DateTime.Parse(Eval("regdate").ToString()).ToString("MM/dd hh:mm") %>' Font-Size="22" ForeColor="white"></asp:Label>
+                                        <asp:Label ID="Label2" runat="server" Text='<%# Bind("round") %>' Font-Size="22" ForeColor="Lime"></asp:Label>期                                    
+                                    注单号:
+                                        <asp:Label ID="Label3" runat="server" Text='<%# Bind("id") %>' ForeColor="Lime" Font-Size="22"></asp:Label>
+                                    </div>
+                                    <div style="font-size: 22px; color: white">
+                                        <asp:Label ID="Label4" runat="server" Text='<%# Bind("uname") %>' Font-Size="22" ForeColor="white"></asp:Label>
+                                        下注 [<asp:Label ID="Label5" runat="server" Text='<%# GetFruitName(Eval("kinds_id").ToString()) %>' Font-Size="22" ForeColor="white"></asp:Label>]
+                                    -<asp:Label ID="Label6" runat="server" Text='<%# Bind("bet_coin") %>' Font-Size="22" ForeColor="white"></asp:Label>金币                                    
+                                    </div>
+                                    <div style="font-size: 22px; color: red">
+                                        中奖 [<asp:Label ID="Label7" runat="server" Text='<%# GetColletName(Eval("fruit").ToString(),Eval("taisai").ToString(),Eval("evodd").ToString(),Eval("kinds_id").ToString()) %>' Font-Size="22" ForeColor="red"></asp:Label>]                                                                  
+                                    奖金 +<asp:Label ID="Label8" runat="server" Text='<%# Bind("coin") %>' Font-Size="22" ForeColor="red"></asp:Label>金币 
+                                    </div>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                        </Columns>
+                        <PagerSettings NextPageText="&gt;" PageButtonCount="6" PreviousPageText="&lt;" FirstPageText="&lt;&lt;" LastPageText="&gt;&gt;" />
+                        <PagerStyle HorizontalAlign="Center" CssClass="GridPager" />
+                    </asp:GridView>
+
+                    <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:mysql_connectstring %>"
+                        ProviderName="<%$ ConnectionStrings:mysql_connectstring.ProviderName %>"
+                        SelectCommand="SELECT betting2.regdate as regdate, betting2.round as round, betting21.id as id, `user`.name AS uname, betting21.bet_coin as bet_coin, betting21.coin as coin, betting21.kinds_id as kinds_id, bettinglist2.fruit as fruit, bettinglist2.taisai as taisai, bettinglist2.evodd as evodd FROM betting2 INNER JOIN `user` ON betting2.user_id = `user`.id INNER JOIN betting21 ON betting2.user_id = betting21.user_id AND betting2.round = betting21.round INNER JOIN bettinglist2 ON betting2.round = bettinglist2.round WHERE (betting2.user_id = ?) ORDER BY betting21.id DESC">
+                        <SelectParameters>
+                            <asp:SessionParameter DefaultValue="-1" Name="user_id" SessionField="user_id" Type="Int64" />
+                        </SelectParameters>
+                    </asp:SqlDataSource>
+                </ul>
+            </div>
+            <script>
+                document.getElementById("closebtn").onclick = function () {
+                    document.getElementById("total_log_area").style.display = 'none';
+                    document.getElementById("popup_menu").style.display = 'block';
+                }
+            </script>
+
+            <div id="chat_area" style="pointer-events:none;display:block;width: 720px; height: 400px; position: absolute; left: 0px; top: 0px; background-image:url('/files/image/transparency.png')">
+                <div id="live_chat_area" style="width: 720px; height: 400px">
+                    <!--chat area-->
+                    <uc1:chat_mobile runat="server" ID="chat_mobile" />                    
+                </div>
+            </div>
+            <div id="gift_area" style="width: 720px; height: 500px; position: absolute; left: 0px; bottom: 70px;  background-color: antiquewhite; z-index:102; display: none">
+                <div id="live_gift_area" style="width: 720px; height: 500px">
+                    <!--chat area-->
+                    <uc1:giftsend_mobile runat="server" ID="giftsend_mobile" />
+                </div>
+            </div>
+
+            <img id="arrow" src="/files/image/images_m/arrow.png" style="width: 30px; height: 40px; position: absolute; left: 20px; top: 20px;z-index:102" />
+            <script>
+                document.getElementById("arrow").onclick = function () {
+                    document.getElementById("popup_menu").style.display = 'block';
+                }
+            </script>
+
+            <div id="mein_menu" style="width: 720px; height: 70px; position: absolute; left: 0px; top: 1120px; background-image: url(img/main_menu.png);">
+                <image id='menu_chat' width='40' height='40' src="img/menu_chat.png" style="position: absolute; left: 57px; top: 18px" />
+                <image id='menu_bet' width='40' height='40' src="img/menu_bet.png" style="position: absolute; left: 340px; top: 15px" />
+                <image id='menu_gift' width='40' height='40' src="img/menu_gift.png" style="position: absolute; left: 612px; top: 14px" />
+            </div>
+
+            <script>
+                var showstate = 0;
+                document.getElementById("menu_bet").onclick = function () {
+                    if (showstate != 1) {
+                        document.getElementById("bet_area").style.display = 'block';
+                        visibleInput(false);
+                        $("#chat_area").css("pointer-events", "none");
+                        document.getElementById("bet_area").style.display = 'block';
+                        
+                        document.getElementById("gift_area").style.display = 'none';
+                        showstate = 1;
+                    }
+                    else {
+                        document.getElementById("bet_area").style.display = 'none';
+                        showstate = 0;
+                    }
+                }
+
+                document.getElementById("menu_chat").onclick = function () {
+                    if (showstate != 2) {
+                        visibleInput(true);
+                        $("#chat_area").css("pointer-events", "auto");
+                        document.getElementById("bet_area").style.display = 'none';
+                        document.getElementById("gift_area").style.display = 'none';
+                        showstate = 2;
+                    }
+                    else {
+                        visibleInput(false);
+                        $("#chat_area").css("pointer-events", "none");
+                        showstate = 0;
+                    }
+                }
+
+                document.getElementById("menu_gift").onclick = function () {
+                    if (showstate != 3) {
+                        document.getElementById("bet_area").style.display = 'none';
+                        visibleInput(false);
+                        $("#chat_area").css("pointer-events", "none");
+                        document.getElementById("gift_area").style.display = 'block';
+                        showstate = 3;
+                    }
+                    else {
+                        document.getElementById("gift_area").style.display = 'none';
+                        showstate = 0;
+                    }
+                }
+            </script>
+            <div id="popup_menu" style="width: 600px; height: 418px; position: absolute; left: 60px; top: 500px; background-image: url(/files/image/images_m/popup_menu.png); z-index:102; display: none;">
+                <img id="close_pop_btn" src="../../files/image/images_m/close_btn.png" style="position: absolute; left: 530px; top: 3px;" />
+                <img id="mute_bg_btn" src="../../files/image/images_m/mute_bg_btn.png" style="position: absolute; left: 78px; top: 87px;" />
+                <img id="mute_eff_btn" src="../../files/image/images_m/mute_eff_btn.png" style="position: absolute; left: 239px; top: 87px;" />
+                <img id="mute_zhubo_btn" src="../../files/image/images_m/mute_zhubo_btn.png" style="position: absolute; left: 400px; top: 87px;" />
+                <img id="gohome_btn" src="../../files/image/images_m/gohome_btn.png" style="position: absolute; left: 78px; top: 230px;" />
+                <%--<img id="goroom_btn" src="../../files/image/images_m/goroom_btn.png" />--%>
+                <img id="showlog_btn" src="../../files/image/images_m/showlog_btn.png" style="position: absolute; left: 402px; top: 230px;" />
+            </div>
+            <script>
+                document.getElementById("close_pop_btn").onclick = function () {
+                    document.getElementById("popup_menu").style.display = 'none';
+                }
+                document.getElementById("showlog_btn").onclick = function () {
+                    document.getElementById("total_log_area").style.display = 'block';
+                    document.getElementById("popup_menu").style.display = 'none';
+                    jQuery("#HiddenField1").val(1);                    
+                }
+                document.getElementById("gohome_btn").onclick = function () {
+                    location.href = "/main/sky_driver.aspx";
+                }
+                document.getElementById("mute_bg_btn").onclick = function () {
+                    if (bg_sound_state == 1) {
+                        document.getElementById("mute_bg_btn").style.opacity = 0.1;
+                        bg_sound_state = 0;
+                    }
+                    else {
+                        document.getElementById("mute_bg_btn").style.opacity = 1;
+                        bg_sound_state = 1;
+                        bg_sound = 1;
+                    }
+                }
+                document.getElementById("mute_eff_btn").onclick = function () {
+                    if (eff_sound_state == 1) {
+                        document.getElementById("mute_eff_btn").style.opacity = 0.1;
+                        eff_sound_state = 0;
+                    }
+                    else {
+                        document.getElementById("mute_eff_btn").style.opacity = 1;
+                        eff_sound_state = 1;
+                    }
+                }
+                document.getElementById("mute_zhubo_btn").onclick = function () {
+                    
+                    if (zhubo_sound_state == 1) {
+                        document.getElementById("mute_zhubo_btn").style.opacity = 0.1;
+                        zhubo_sound_state = 0;
+                        strem_player.mute(true);
+                    }
+                    else {
+                        document.getElementById("mute_zhubo_btn").style.opacity = 1;
+                        zhubo_sound_state = 1;
+                        strem_player.mute(false);
+                    }
+                }
+            </script>
+
+        </form>
+    </div>
+</body>
+</html>
+
+<script type="text/javascript">
+    window.onload = function () {
+        var g = new wLaoHuJi("play");
+        g.init();
+    }
+
+    //var msg = PostAjax("/Ajax/spinlog.ashx", "");    
+    //var myArray = new Array(7);
+    //myArray = msg.split('/');
+    //var semi = new Array(3);
+    //for (var i = 0; i < 7; i++) {
+    //    semi = myArray[i].split(',');
+    //    var cssfruit = slotlogcss[semi[0] - 1];
+    //    var text = "<div style='width:75px;height:80px' class='" + cssfruit + "'></div>"
+    //    if (text.length) {
+    //        $('<li />', { html: text }).appendTo('ul.slot_log')
+    //    }
+    //    //$("#slot_log").scrollTop($("#slot_log")[0].scrollHeight);
+
+    //    var csstaisai = taisailogcss[semi[1]];
+    //    var text = "<div style='width:75px;height:80px' class='" + csstaisai + "'></div>"
+    //    if (text.length) {
+    //        $('<li />', { html: text }).appendTo('ul.diceTai_log')
+    //    }
+    //   // $("#diceTai_log").scrollTop($("#diceTai_log")[0].scrollHeight);
+
+    //    var cssevodd = evoddlogcss[semi[2]];
+    //    var text = "<div style='width:75px;height:80px' class='" + cssevodd + "'></div>"
+    //    if (text.length) {
+    //        $('<li />', { html: text }).appendTo('ul.diceodd_log')
+    //    }
+    //    //$("#diceodd_log").scrollTop($("#diceodd_log")[0].scrollHeight);
+    //}
+</script>

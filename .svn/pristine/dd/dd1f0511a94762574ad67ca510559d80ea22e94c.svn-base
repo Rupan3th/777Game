@@ -1,0 +1,402 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="main.aspx.cs" Inherits="_777Game_main" %>
+
+<%@ Register Src="music_onoff.ascx" TagName="music_onoff" TagPrefix="uc1" %>
+<%@ Register Src="chat_room.ascx" TagName="chat_room" TagPrefix="uc2" %>
+<%@ Register Src="~/777Game/chat_room.ascx" TagPrefix="uc1" TagName="chat_room" %>
+
+
+<%@ Register src="chat6cn_room.ascx" tagname="chat6cn_room" tagprefix="uc3" %>
+
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+   <title>水果老虎机</title>
+    <script src="../files/js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="../files/js/fruit_slots.js"></script>
+
+    <script type="text/javascript" src="../files/js/player.js"></script>
+    <script type="text/javascript" src="../files/js/segment-display.js"></script>
+    <script type="text/javascript" src="../files/js/jquery.jqGauges.min.js"></script>
+    <script type="text/javascript" src="../files/js/jquery.mobile-1.4.5.js"></script>
+    <script src="/files/js/jquery.cookie.js"></script>
+    <script src="/files/js/common.js"></script>
+    <link href="../files/css/common.css" rel="stylesheet" /> 
+    <link rel="stylesheet" href="../files/css/industrial.css">
+   <!-- <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" /> -->
+   <%--<script type="text/javascript" src="../files/js/swfobject.js"></script>--%>
+    <script type="text/javascript" src="http://p.jwpcdn.com/6/10/jwplayer.js"></script>
+    <script type="text/javascript" src="//player.wowza.com/player/latest/wowzaplayer.min.js"></script>
+    <%--<script type="text/javascript" src="../files/js/jquery.tempgauge.js"></script>--%>
+
+    <style type="text/css">
+        *
+        {
+            font-size:12px;
+            font-family:宋体;
+            margin:0;
+            padding:0;
+        }
+
+        .backimg {
+            /*Login Page Background*/
+            width: 1920px;
+            height: 1080px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin: -540px 0 0 -960px;                             
+        }     
+
+    </style>
+    <script>
+        var user_id = '<%= Session["user_id"] %>';
+        var username = '<%= Session["User"] %>';
+        var usercoin = '<%= Session["coin"] %>';
+        usercoin = usercoin + 1 - 1;
+        var zhibo_id = '<%= Session["zhibo_id"] %>';
+        zhibo_id = parseInt(zhibo_id);
+        zhibo_id = 15;
+
+        PostAjax("/Ajax/loginstate.ashx", "category=2&user_id=" + user_id + "&loginfir=" + 1);
+
+        setInterval(function () {
+           PostAjax("/Ajax/loginstate.ashx", "category=2&user_id=" + user_id);
+        }, 5 * 60 * 1000);
+
+        //var swfVersionStr = "11.1.0";       
+        //var xiSwfUrlStr = "playerProductInstall.swf";
+        //var flashvars = {};
+        //var params = {};
+        //flashvars.streamname = "testing";
+        //flashvars.rtmpurl = "rtmp://192.168.1.101:1935/videochat";
+        //params.quality = "high";
+
+        //params.bgcolor = "#ffffff";
+        //params.allowscriptaccess = "sameDomain";
+        //params.allowfullscreen = "true";
+        //var attributes = {};
+        //attributes.id = "lss_play_demo";
+        //attributes.name = "lss_play_demo";
+        //attributes.align = "middle";
+        //swfobject.embedSWF("lss_play_demo.swf", "adv", "222", "233", swfVersionStr, xiSwfUrlStr, flashvars, params, attributes);     
+
+        
+        //var xmlHttp;
+        //function srvTime() {
+        //    if (window.XMLHttpRequest) {//분기하지 않으면 IE에서만 작동된다.
+        //        xmlHttp = new XMLHttpRequest(); // IE 7.0 이상, 크롬, 파이어폭스 등
+        //        //xmlHttp.open('HEAD', 'http://localhost:64965/login.aspx', false);
+        //        xmlHttp.open('HEAD', window.location.href.toString(), false);
+        //        xmlHttp.setRequestHeader("Content-Type", "text/html");
+        //        xmlHttp.send('');
+        //        return xmlHttp.getResponseHeader("Date");
+        //    } else if (window.ActiveXObject) {
+        //        xmlHttp = new ActiveXObject('Msxml2.XMLHTTP');
+        //        xmlHttp.open('HEAD', window.location.href.toString(), false);
+        //        xmlHttp.setRequestHeader("Content-Type", "text/html");
+        //        xmlHttp.send('');
+        //        return xmlHttp.getResponseHeader("Date");
+        //    }
+        //}
+        //var st = srvTime();
+        //var today = new Date(st);
+        //var times = today.getHours() * 3600 + today.getMinutes() * 60 + today.getSeconds();
+        //var remain_gtime = times % 120;
+        //var round = parseInt(times / 120);
+        //var dday = (today.getFullYear() - 2000) * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+        //round = dday * 1000 + round;
+        
+        //$(document).ready(function () {
+        //    jwplayer("adv").setup({
+        //        playlist: [{
+        //            'sources': [
+        //                {
+        //                    'file': 'rtmp://103.249.107.127:1935/live/testing'
+        //                },
+        //                {
+        //                    'file': 'http://192.168.1.101:1935/videochat/testing/playlist.m3u8'
+        //                }
+        //            ]
+        //        }],
+        //        width: 222,
+        //        height: 233,
+        //        autostart: 'true',
+        //        logo: {
+        //            file: '/files/image/images/publish_bkg.png"',
+        //            link: 'http://www.blender.org/foundation/'
+        //        }
+                
+        //    });
+        //});
+       
+     
+        ///streamplayer drag move
+        var img_L = 0;
+        var img_T = 0;
+        var targetObj;
+
+        function getLeft(o){
+            return parseInt(o.style.left.replace('px', ''));
+        }
+        function getTop(o){
+            return parseInt(o.style.top.replace('px', ''));
+        }
+
+        // 이미지 움직이기
+        function moveDrag(e){
+            var e_obj = window.event? window.event : e;
+            var dmvx = parseInt(e_obj.clientX + img_L);
+            var dmvy = parseInt(e_obj.clientY + img_T);
+            targetObj.style.left = dmvx +"px";
+            targetObj.style.top = dmvy +"px";
+            return false;
+        }
+
+        // 드래그 시작
+        function startDrag(e, obj){
+            targetObj = obj;
+            var e_obj = window.event? window.event : e;
+            img_L = getLeft(obj) - e_obj.clientX;
+            img_T = getTop(obj) - e_obj.clientY;
+
+            document.onmousemove = moveDrag;
+            document.onmouseup = stopDrag;
+            if(e_obj.preventDefault)e_obj.preventDefault(); 
+        }
+
+        // 드래그 멈추기
+        function stopDrag() {
+            document.onmousemove = null;
+            document.onmouseup = null;
+        }
+
+        function doubleSize(e, obj) {
+            var width_D = parseInt(obj.style.width) *2;
+            var height_D = parseInt(obj.style.height) *2;
+            if (width_D > 888)
+            {
+                width_D = 222;
+                height_D = 232
+                obj.style.left = 595 + "px";
+                obj.style.top = 202 + "px";
+            }
+            obj.style.width = width_D + "px";
+            obj.style.height = height_D + "px";
+        }
+
+        // 실린더
+        //setInterval(function () {
+        //    $(function () {         
+        //            $(".tempGauge0").tempGauge({ width: 20, height: 150, borderWidth: 1, borderColor: "white", defaultTemp: Math.floor(Math.random() * 100) + 1 });
+        //            $(".tempGauge1").tempGauge({ width: 20, height: 60, borderWidth: 1, borderColor: "white", defaultTemp: 50 });
+        //    });
+        //}, 5000);
+        
+
+    </script>
+</head>
+<body style="width:1920px; height:1080px; background-color:saddlebrown; margin: 0 0 0 0;">
+    <audio id="bgsound" src="../files/audio/bg.mp3" autoplay="autoplay" loop="loop"></audio>
+<div id="div_back" class="backimg">
+    <form id="form1" runat="server">        
+        <div id="play" class="game_main"></div>
+
+        <div id="slot_machine_log" style="width:75px; height:560px; position: absolute; left:240px; top:201px; ">
+            <!--left log area-->
+            <ul id='slot_log' class='slot_log' style="width:75px; height:560px; overflow-y:hidden"></ul>                
+        </div>
+
+        <div id="dice_log1" style="width:75px; height:560px; position: absolute; left:1107px; top:205px; ">
+            <!--dice log area-->
+            <ul id='diceTai_log' class='diceTai_log' style="width:75px; height:560px; overflow-y:hidden"></ul>
+        </div>
+        <div id="dice_log2" style="width:75px; height:560px; position: absolute; left:1182px; top:205px; ">
+            <!--dice log area-->
+            <ul id='diceodd_log' class='diceodd_log' style="width:75px; height:560px; overflow-y:hidden"></ul>
+        </div>
+
+        <div id="chat_area" style="width:419px; height:752px; position: absolute; left:1275px; top:75px">
+            <div id="total_log_area" style="width:419px; height:208px">
+                <!--top total log area-->
+                <ul id='total_log' class='total_log' style="color:blue; width:400px; height:188px; margin:11px; margin-left:20px; overflow-y:hidden"></ul>
+            </div>
+            <div id="live_chat_area" style="width:395px; height:544px;margin-left:10px">
+                <!--chat area-->
+                <uc3:chat6cn_room ID="chat6cn_room1" runat="server" />
+            </div>
+        </div>
+
+       <div id="streamplay" style="position:absolute;border:1px #124b40 solid;width:222px;height:232px;z-index:102;left:595px;top:202px; cursor:pointer; cursor:hand" onmousedown="startDrag(event, this)" ondblclick="doubleSize(event, this)" >
+            <%--<image id='adv' width='222' height='232' src="../files/image/images/publish_bkg.png"/>--%>
+           <script>
+           WowzaPlayer.create('streamplay',
+                {
+                    "license": "PLAY1-aaTQP-Nnbb7-Q3d8z-tYNbm-6ajk8",
+                    "title": "testing",
+                    "description": "",
+                    "sourceURL": "http://103.249.107.127:1935/live/testing/playlist.m3u8",
+                    //"sourceURL": "http://192.168.1.105:1935/demolive/testing/playlist.m3u8",
+                    //"sourceURL": "http://103.249.107.127:1935/myvod/_definst_/volvo/mp4:volvo.mp4/playlist.m3u8",
+                    "autoPlay": true,
+                    "volume": "75",
+                    "mute": false,
+                    "loop": false,
+                    "audioOnly": false,
+                    "uiShowQuickRewind": true,
+                    "uiQuickRewindSeconds": "30"
+                }
+            );
+           </script>
+        </div>
+       <%-- <div style="position:absolute; left:310px; top:920px"><div class="tempGauge0" ></div></div>
+        <div style="position:absolute; left:455px; top:920px"><div class="tempGauge0" ></div></div>
+        <div style="position:absolute; left:600px; top:920px"><div class="tempGauge0" ></div></div>
+        <div style="position:absolute; left:745px; top:920px"><div class="tempGauge0" ></div></div>
+        <div style="position:absolute; left:910px; top:920px"><div class="tempGauge0" ></div></div>
+        <div style="position:absolute; left:1050px; top:920px"><div class="tempGauge0" ></div></div>
+        <div style="position:absolute; left:1195px; top:920px"><div class="tempGauge0" ></div></div>
+        <div style="position:absolute; left:1335px; top:920px"><div class="tempGauge0" ></div></div>
+
+        <div style="position:absolute; left:1496px; top:842px"><div class="tempGauge1" ></div></div>
+        <div style="position:absolute; left:1512px; top:897px"><div class="tempGauge1" ></div></div>
+        <div style="position:absolute; left:1532px; top:958px"><div class="tempGauge1" ></div></div>
+        <div style="position:absolute; left:1553px; top:1020px"><div class="tempGauge1" ></div></div>--%>
+        
+        <%--<div class="industrial thermometer size one" style="position:absolute; left:330px; top:910px"> <span class="ticks" data-amount="10"></span>
+        <div class="space"></div>
+        <div class="meter danger"></div>
+        </div>
+
+        <div class="industrial thermometer size one" style="position:absolute; left:475px; top:910px"> <span class="ticks" data-amount="10"></span>
+        <div class="space"></div>
+        <div class="meter safe"></div>
+        </div>
+
+        <div class="industrial thermometer size one" style="position:absolute; left:617px; top:910px"> <span class="ticks" data-amount="10"></span>
+        <div class="space"></div>
+        <div class="meter"></div>
+        </div>
+
+        <div class="industrial thermometer size one" style="position:absolute; left:760px; top:910px"> <span class="ticks" data-amount="10"></span>
+        <div class="space"></div>
+        <div class="meter warning"></div>
+        </div>
+
+        <div class="industrial thermometer size one" style="position:absolute; left:790px; top:910px"> <span class="ticks" data-amount="10"></span>
+        <div class="space"></div>
+        <div class="meter unimportant"></div>
+        </div>
+
+        <div class="industrial thermometer size one" style="position:absolute; left:935px; top:910px"> <span class="ticks" data-amount="10"></span>
+        <div class="space"></div>
+        <div class="meter danger"></div>
+        </div>
+
+        <div class="industrial thermometer size one" style="position:absolute; left:1080px; top:910px"> <span class="ticks" data-amount="10"></span>
+        <div class="space"></div>
+        <div class="meter safe"></div>
+        </div>
+
+        <div class="industrial thermometer size one" style="position:absolute; left:1220px; top:910px"> <span class="ticks" data-amount="10"></span>
+        <div class="space"></div>
+        <div class="meter"></div>
+        </div>
+
+
+        <div class="industrial thermometer size two" style="position:absolute; left:1505px; top:835px"> <span class="ticks" data-amount="5"></span>
+        <div class="space"></div>
+        <div class="meter danger"></div>
+        </div>
+        <div class="industrial thermometer size two" style="position:absolute; left:1522px; top:892px"> <span class="ticks" data-amount="5"></span>
+        <div class="space"></div>
+        <div class="meter safe"></div>
+        </div>
+        <div class="industrial thermometer size two" style="position:absolute; left:1542px; top:953px"> <span class="ticks" data-amount="5"></span>
+        <div class="space"></div>
+        <div class="meter"></div>
+        </div>
+        <div class="industrial thermometer size two" style="position:absolute; left:1562px; top:1013px"> <span class="ticks" data-amount="5"></span>
+        <div class="space"></div>
+        <div class="meter warning"></div>
+        </div>
+
+        <script src="../files/js/industrial.js"></script> --%>
+        <%--<script src="../files/js/app.js"></script> --%>
+
+    </form>
+</div>
+    <script>
+        //document.getElementById('bgsound').play();
+        function onResize() {
+            var w = 1920, tmpw;
+            var h = 1080, tmph;
+            var mw = '-960px';
+            var mh = '-540px';
+
+            var val = window.document.getElementById("div_back");
+
+            //set margin by current layout. if this code no excute, page broken when resize browser.
+            mw = val.clientWidth / 2; mw = "-" + mw + 'px';
+            mh = val.clientHeight / 2; mh = "-" + mh + 'px';
+
+            //If height too long or less long(when zoom)
+            tmph = Math.min(h, self.innerHeight);
+            if (val.clientHeight > self.innerHeight || (h >= tmph && tmph > val.clientHeight)) {
+                document.getElementById('div_back').style.height = tmph + 'px';
+                mh = tmph / 2;
+                mh = "-" + mh + 'px';
+            }
+
+            //If width too long or less long(when zoom)
+            tmpw = Math.min(w, self.innerWidth);
+            if (val.clientWidth > self.innerWidth || (w >= tmpw && tmpw > val.clientWidth)) {
+                document.getElementById('div_back').style.width = tmpw + 'px';
+                mw = tmpw / 2;
+                mw = "-" + mw + 'px';
+            }
+
+            //re layout by margin
+            document.getElementById('div_back').style.margin = mh + ' 0 0 ' + mw;
+        }
+        window.onresize = onResize;
+        onResize();
+    </script>
+</body>
+</html>
+
+<script type="text/javascript">
+    window.onload = function() {
+        var g = new wLaoHuJi("play");
+        g.init();
+    }
+
+    var msg = PostAjax("/Ajax/spinlog.ashx", "");    
+    var myArray = new Array(7);
+    myArray = msg.split('/');
+    var semi = new Array(3);
+    for (var i = 0; i < 7; i++) {
+        semi = myArray[i].split(',');
+        var cssfruit = slotlogcss[semi[0] - 1];
+        var text = "<div style='width:75px;height:80px' class='" + cssfruit + "'></div>"
+        if (text.length) {
+            $('<li />', { html: text }).appendTo('ul.slot_log')
+        }
+        //$("#slot_log").scrollTop($("#slot_log")[0].scrollHeight);
+
+        var csstaisai = taisailogcss[semi[1]];
+        var text = "<div style='width:75px;height:80px' class='" + csstaisai + "'></div>"
+        if (text.length) {
+            $('<li />', { html: text }).appendTo('ul.diceTai_log')
+        }
+       // $("#diceTai_log").scrollTop($("#diceTai_log")[0].scrollHeight);
+
+        var cssevodd = evoddlogcss[semi[2]];
+        var text = "<div style='width:75px;height:80px' class='" + cssevodd + "'></div>"
+        if (text.length) {
+            $('<li />', { html: text }).appendTo('ul.diceodd_log')
+        }
+        //$("#diceodd_log").scrollTop($("#diceodd_log")[0].scrollHeight);
+    }
+</script>

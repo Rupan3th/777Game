@@ -1,0 +1,29 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+public partial class houtai_vod_content : System.Web.UI.Page
+{
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (Request["id"] != null)
+        {
+            hdType.Value = Request["id"].ToString();
+            switch(hdType.Value)
+            {
+                case "0": hddetialid.Value = "25"; break;
+                case "1": hddetialid.Value = "26"; break;
+                case "2": hddetialid.Value = "27"; break;
+            }
+        }
+        
+    }
+
+    protected void ddlClssId_DataBinding(object sender, EventArgs e)
+    {
+        ddlClssId.Items.Clear();
+    }
+}

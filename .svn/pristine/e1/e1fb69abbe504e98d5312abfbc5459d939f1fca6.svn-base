@@ -1,0 +1,110 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="system.aspx.cs" Inherits="houtai_vod_system" %>
+
+<%@ Register src="../../cheditor/cheditor.ascx" tagname="cheditor" tagprefix="uc1" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+    <script src="/files/js/jquery-1.8.3.min.js"></script>
+    <style type="text/css">
+        .round-button {
+            background-color: #169BD5;
+            -webkit-border-radius: 7px;
+            padding: 5px;
+        }
+
+        .auto-style2 {
+            width: 150px;
+        }
+
+        .auto-style3 {
+            width: 170px;
+        }
+    </style>
+    <script>
+        function sel_changed(id, _this) {
+            switch (id) {
+                case 0:
+                    jQuery("#tr_id").show();
+                    jQuery("#tr_range").hide();
+                    break;
+                case 1:
+                    jQuery("#tr_id").hide();
+                    jQuery("#tr_range").show();
+                    break;
+            }
+        }
+    </script>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div>
+
+            <asp:MultiView ID="MultiView1" runat="server" ActiveViewIndex="0">
+                <asp:View ID="View1" runat="server">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td style="vertical-align: top; text-align: center" class="auto-style2"><span>网站公告</span></td>
+                            <td style="vertical-align: top;">
+                                <asp:TextBox ID="tbcontent" runat="server" Height="192px" Width="518px" TextMode="MultiLine"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="auto-style2">&nbsp;</td>
+                            <td>
+                                <asp:Button ID="btnModify" CssClass="round-button" runat="server" BackColor="#169BD5" Text="确定修改" Height="45px" Width="115px" />
+                            </td>
+                        </tr>
+                    </table>
+                </asp:View>
+                <asp:View ID="View2" runat="server">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td class="auto-style2" style="text-align: center"><span>发送站内信</span></td>
+                            <td>
+                                <input id="rbinvidual" name="type" type="radio" checked="checked" onchange="sel_changed(0, this)">单发站内信</input>&nbsp;&nbsp;
+                                <input id="rbrange" name="type" type="radio" onchange="sel_changed(1, this)">指定会员组</input>
+                            </td>
+                        </tr>
+                        <tr id="tr_id">
+                            <td class="auto-style2" style="text-align: center"><span>接收ID</span></td>
+                            <td>
+                                <asp:TextBox ID="tbrecvid" runat="server" Width="226px"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr id="tr_range" style="display: none;">
+                            <td class="auto-style2" style="text-align: center"><span>会员组</span></td>
+                            <td>
+                                <select id="selrange" class="auto-style3" name="D1">
+                                    <option></option>
+                                </select></td>
+                        </tr>
+                        <tr>
+                            <td class="auto-style2" style="text-align: center"><span>信件标题</span></td>
+                            <td>
+                                <asp:TextBox ID="tbtitle" runat="server" Width="558px"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="auto-style2" style="text-align: center"><span>信件内容</span></td>
+                            <td>
+
+                                <uc1:cheditor ID="cheditor1" runat="server" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="auto-style2" style="text-align: center">&nbsp;</td>
+                            <td>
+                                <asp:Button ID="btnSend" runat="server" BackColor="#169BD5" CssClass="round-button" Height="45px" Text="确定发送" Width="115px" />
+                            </td>
+                        </tr>
+                    </table>
+                </asp:View>
+            </asp:MultiView>
+
+        </div>
+    </form>
+</body>
+</html>

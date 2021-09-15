@@ -1,0 +1,93 @@
+﻿<%@ WebHandler Language="C#" Class="chat_action" %>
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.Security;
+using MySql.Data.MySqlClient;
+using System.Web.SessionState;
+
+public class chat_action : IHttpHandler , IReadOnlySessionState
+{
+    mysql msql = new mysql();
+    public void ProcessRequest (HttpContext context) {
+        String strCmd = "";
+        String strMsg = "";
+        if( context.Request["cmd"] != null )
+        {
+            strCmd = context.Request["cmd"].ToString();
+            if (strCmd.CompareTo("init") == 0)
+            {
+                String strGUID = System.Guid.NewGuid().ToString("N");
+                wowza_chat wowchat = new wowza_chat( strGUID );
+                if (wowchat.Connect())
+                {
+                    if ( context.Request["u"] != null && context.Request["u"].ToString().Length > 0 )
+                        wowchat.strUser = context.Request["u"].ToString();
+                    global.wowChatObjs.Add(strGUID, wowchat);
+                }
+                else strGUID = "";//If faild, return empty string.
+                context.Response.Write( strGUID );
+            }
+            else if (strCmd.CompareTo("send") == 0
+                        && context.Request["chl"] != null
+                        && context.Request["chl"].ToString().Length > 0 )
+            {
+                wowza_chat wowchat = (wowza_chat)global.wowChatObjs[context.Request["chl"].ToString()];
+                if ( wowchat != null
+                         && context.Request["txt"] != null)
+                {
+                    strMsg = utility.ClearTaom(context.Request["txt"].ToString());
+                    //{{Process gift(/GIFT/Name/Num/)
+                    if(strMsg.Contains("GIFT"))
+                    {
+                        int nJubaoId = -1;//FIXME
+                        int nGiftCount = 0;
+                        string[] sgftInfo = strMsg.Split('/');//선물보내기때 present표 추가, user표에서 coin, temp_coin감소
+                        if(int.TryParse(sgftInfo[3], out nGiftCount) 
+                                && nGiftCount > 0 
+                                && context.Session != null 
+                                && context.Session["user_id"] != null )
+                        {
+                            msql.Execute("insert into present(uid, zid, coin) values("+context.Session["user_id"].ToString()+","+nJubaoId+","+nGiftCount+")");
+                            msql.Execute("update user set coin=coin-"+nGiftCount+", temp_coin=temp_coin-"+nGiftCount+" where id="+context.Session["user_id"].ToString());
+                        }
+                    }
+                    //}}Process gift(/GIFT/Name/Num/)
+
+                    wowchat.SendMsg(strMsg);
+                }
+            }
+            else if (strCmd.CompareTo("recv") == 0
+                        && context.Request["chl"] != null
+                        && context.Request["chl"].ToString().Length > 0 )
+            {
+                wowza_chat wowchat = (wowza_chat)global.wowChatObjs[context.Request["chl"].ToString()];
+                if ( wowchat != null)
+                {
+                    strMsg = wowchat.GetMsg();
+                    if( strMsg.Length > 0 )
+                    {
+                        context.Response.Write( strMsg );
+                    }
+                }
+            }
+            else if (strCmd.CompareTo("close") == 0
+                        && context.Request["chl"] != null
+                        && context.Request["chl"].ToString().Length > 0 )
+            {
+                global.wowChatObjs.Remove(context.Request["chl"].ToString());
+            }
+        }
+    }
+
+    public bool IsReusable {
+        get {
+            return false;
+        }
+    }
+
+}

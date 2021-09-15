@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!--
+  For more information on how to configure your ASP.NET application, please visit
+  http://go.microsoft.com/fwlink/?LinkId=169433
+  -->
+<configuration>
+  <appSettings>
+    <add key="ValidationSettings:UnobtrusiveValidationMode" value="None"/>
+
+<!-- for local development.
+    <add key="yxdeskUrl" value="http://103.66.216.139:8080/yxdesk/"/>
+    <add key="WowzaLicense" value="PLAY1-aaTQP-Nnbb7-Q3d8z-tYNbm-6ajk8"/>
+    <add key="WowzaVodUrl" value="http://192.168.1.105:1935/myvod/_definst_/"/>
+    <add key="WowzaLiveUrl" value="http://wowzaprdxhi-lh.akamaihd.net/i/0be49513_1@433777/master.m3u8"/>
+    <add key="MultiUploadUrl" value="http://192.168.1.105:999/api/FileUpload"/>
+    <add key="DownloadUrl" value="http://192.168.1.105:999/api/Dload"/>
+    <add key="ChatServer" value="rtmp://192.168.1.105/textchat"/>
+    <add key="JspServer" value="http://192.168.1.108:8080/bettingproj/betting/logout.jsp"/>
+--> 
+    <add key="yxdeskUrl" value="http://103.66.216.139:8080/yxdesk/"/>
+    <add key="WowzaLicense" value="PLAY1-aaTQP-Nnbb7-Q3d8z-tYNbm-6ajk8"/>
+    <add key="WowzaVodUrl" value="http://103.66.216.157:1935/myvod/_definst_/"/>
+    <add key="WowzaLiveUrl" value="http://wowzaprdxhi-lh.akamaihd.net/i/0be49513_1@433777/master.m3u8"/>
+    <add key="MultiUploadUrl" value="http://103.66.216.157:999/api/FileUpload"/>
+    <add key="DownloadUrl" value="http://103.66.216.157:999/api/Dload"/>
+    <add key="ChatServer" value="rtmp://103.66.216.157/textchat"/>
+    <add key="JspServer" value="http://103.66.216.155:8080/bettingproj/betting/logout.jsp"/>
+   
+  </appSettings>
+  <connectionStrings>
+    <!--<add name="mysql_connectstring" connectionString="server=192.168.1.104;user id=user;password=ghostman;database=bettingproj" providerName="MySql.Data.MySqlClient"/>-->
+    <add name="mysql_connectstring" connectionString="server=103.66.216.155;user id=user;password=ghostman;database=bettingproj" providerName="MySql.Data.MySqlClient"/>
+  </connectionStrings>
+  <system.web>
+    <authentication mode="Forms">
+      <forms loginUrl="login.aspx" name="MyAuthentication" timeout="30"/>
+    </authentication>
+    <httpRuntime targetFramework="4.5.2"/>
+    <customErrors mode="RemoteOnly" defaultRedirect="error.aspx"/>
+    <compilation debug="false" optimizeCompilations="true">
+      <assemblies>
+        <add assembly="MySql.Data, Version=6.9.9.0, Culture=neutral, PublicKeyToken=C5687FC88969C44D"/>
+        <add assembly="MySql.Web, Version=6.9.9.0, Culture=neutral, PublicKeyToken=C5687FC88969C44D"/>
+        <add assembly="System.Net.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=B03F5F7F11D50A3A"/>
+        <add assembly="System.Runtime.Remoting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=B77A5C561934E089"/>
+      </assemblies>
+    </compilation>
+  </system.web>
+</configuration>

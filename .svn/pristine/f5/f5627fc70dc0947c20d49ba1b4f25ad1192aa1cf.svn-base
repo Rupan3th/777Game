@@ -1,0 +1,82 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="main.aspx.cs" Inherits="_777Game_main" %>
+
+<%@ Register Src="music_onoff.ascx" TagName="music_onoff" TagPrefix="uc1" %>
+<%@ Register Src="chat_room.ascx" TagName="chat_room" TagPrefix="uc2" %>
+<%@ Register Src="~/777Game/chat_room.ascx" TagPrefix="uc1" TagName="chat_room" %>
+
+
+<%@ Register src="chat6cn_room.ascx" tagname="chat6cn_room" tagprefix="uc3" %>
+
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+   <title>水果老虎机</title>
+    <script src="../files/js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="../files/js/fruit_slots.js"></script>
+
+    <script type="text/javascript" src="../files/js/player.js"></script>
+    <script type="text/javascript" src="../files/js/segment-display.js"></script>
+    <script type="text/javascript" src="../files/js/jquery.jqGauges.min.js"></script>
+    <link href="../files/css/common.css" rel="stylesheet" /> 
+
+    <style type="text/css">
+        *
+        {
+            font-size:12px;
+            font-family:宋体;
+            margin:0;
+            padding:0;
+        }
+    </style>
+    <script>
+        var username = '<%= Session["User"] %>';
+        var usercoin = '<%= Session["coin"] %>';
+        usercoin = usercoin + 1 - 1;
+        
+    </script>
+</head>
+<body>
+    <form id="form1" runat="server">
+ <audio src='../files/audio/bg.mp3' autoplay=''></audio>
+ <div id="play" class="game_main"></div>
+
+ <div id="slot_machine_log" style="width:75px; height:555px; background:url(../files/image/images/slots_log.png); position: absolute; left:240px; top:207px; z-index:105">
+     <!--left log area-->
+
+
+ </div>
+
+
+ <div id="dice_log" style="width:150px; height:555px; background:url(../files/image/images/slots_log.png); position: absolute; left:1107px; top:210px; z-index:105">
+     <!--dice log area-->
+
+
+ </div>
+
+
+  <div id="chat_area" style="width:419px; height:752px; position: absolute; left:1275px; top:75px; z-index:105">
+      <div id="total_log_area" style="width:419px; height:208px">
+          <!--top total log area-->
+          <ul id='total_log' class='total_log' style="color:blue; width:400px; height:188px; margin:11px; overflow-y:hidden; font-size:20px"></ul>
+    </div>
+    <div id="live_chat_area" style="width:419px; height:544px">
+        <!--chat area-->
+
+        <uc3:chat6cn_room ID="chat6cn_room1" runat="server" />
+
+    </div>
+ </div>
+
+<!--<div id="gamelog" class="game_log" style='position:absolute;width:50px;height:550px;left:572px;top:0px;'></div>-->
+    </form>
+</body>
+</html>
+
+<script type="text/javascript">
+    window.onload = function() {
+        var g = new wLaoHuJi("play");
+        g.init();
+    }
+</script>

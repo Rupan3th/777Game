@@ -1,0 +1,430 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="media_mobile_Default" %>
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title></title>
+    <link href="/files/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="/files/js/jquery-1.8.3.min.js"></script>
+    <link href="common.css" rel="stylesheet" />
+    <style type="text/css">
+        .GridPager a, .GridPager span {
+            margin: 5px 5px 5px 5px;
+            display: block;
+            height: 60px;
+            width: 70px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .GridPager a {
+            background-color: #f5f5f5;
+            color: #969696;
+            border: 1px solid #969696;
+        }
+
+        .GridPager span {
+            background-color: #A1DCF2;
+            color: #000;
+            border: 1px solid #3AC0F2;
+        }
+    </style>
+</head>
+<body>
+    <table style="position: absolute; width: 100%; height: 100%" class="table_form">
+        <tr>
+            <td style="height: 59px">
+                <div style="background-color: #232323; height: 59px; width: 100%; display: table;">
+                    <span style="padding-left: 10px; display: table-cell; vertical-align: middle;">
+                        <img alt="" src="/files/image/mobile_mark.png" />
+                    </span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="height: 98px">
+                <div class="dropdown" style="white-space: nowrap; background-color: #323232; height: 98px; text-align: left; display: table;">
+                    <div style="float: left; width: 5%; height: 100%;">
+                        &nbsp;
+                    </div>
+                    <div style="float: left; width: 80%; height: 100%; display: table;">
+                        <span style="display: table-cell; vertical-align: middle;">
+                            <marquee id="notice" behavior="scroll" direction="left" style="width: 100%; height: 60%; color: crimson; background-color: white; font-size: 40px; vertical-align: middle;"></marquee>
+                        </span>
+                    </div>
+                    <div style="float: left; width: 5%; height: 100%;">
+                        &nbsp;
+                    </div>
+                    <img src="/files/image/mobile_menu.png" onclick="myFunction()" class="dropbtn" style="vertical-align: middle;" />
+                    <div id="myDropdown" class="dropdown-content">
+                        <a href="javascript:jQuery('#hf_filter').val(0);jQuery('#form1').submit();">最爱欢迎</a>
+                        <a href="javascript:jQuery('#hf_filter').val(1);jQuery('#form1').submit();">最多点击</a>
+                        <a href="javascript:jQuery('#hf_filter').val(2);jQuery('#form1').submit();">免费区</a>
+                        <a href="javascript:jQuery('#hf_filter').val(3);jQuery('#form1').submit();">收费区</a>
+                        <a href="javascript:SearchDialog();">
+                            <img alt="" src="/files/image/mobile_search.png" />
+                        </a>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="height: 100%;">
+                <form id="form1" runat="server" style="height: 100%;">
+                    <asp:HiddenField ID="hf_media" runat="server" Value="0" />
+                    <asp:HiddenField ID="hf_clss" runat="server" Value="-1" />
+                    <asp:HiddenField ID="hf_filter" runat="server" Value="-1" />
+                    <asp:HiddenField ID="hf_search" runat="server" Value="" />
+                    <table style="width: 100%; height: 100%; background-color: #ececec; text-align: center;">
+                        <tr>
+                            <td style="width: 15%; color: #aaaaaa;">
+                                <asp:HyperLink ID="hlmovie" runat="server" NavigateUrl="javascript:jQuery('#hf_media').val(0);jQuery('#hf_clss').val(-1);jQuery('#hf_search').val('');jQuery('#form1').submit();">视频</asp:HyperLink>
+                            </td>
+                            <td style="color: #aaaaaa;">
+                                <asp:DataList ID="dlmovie" runat="server" DataSourceID="SqlDataSource1" HorizontalAlign="Center" RepeatColumns="6" RepeatDirection="Horizontal">
+                                    <ItemTemplate>
+                                        <a href="javascript:jQuery('#hf_media').val(0);jQuery('#hf_clss').val(<%# Eval("id") %>);jQuery('#form1').submit();">&nbsp;<asp:Label ID="Label1" runat="server" Text='<%# Eval("kname") %>'></asp:Label>&nbsp;
+                                        </a>
+                                    </ItemTemplate>
+                                    <SeparatorStyle Width="10px" />
+                                </asp:DataList>
+
+                                <asp:SqlDataSource ID="SqlDataSource1" runat="server"
+                                    ConnectionString="<%$ ConnectionStrings:mysql_connectstring %>"
+                                    ProviderName="<%$ ConnectionStrings:mysql_connectstring.ProviderName %>"
+                                    SelectCommand="SELECT id, kname FROM kinds2 WHERE ((isdel = ?) AND (detail_id = ?))">
+                                    <SelectParameters>
+                                        <asp:Parameter DefaultValue="0" Name="isdel" Type="Int32" />
+                                        <asp:Parameter DefaultValue="25" Name="detail_id" Type="Int32" />
+                                    </SelectParameters>
+                                </asp:SqlDataSource>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="color: #aaaaaa;">
+                                <asp:HyperLink ID="hlphoto" runat="server" NavigateUrl="javascript:jQuery('#hf_media').val(1);jQuery('#hf_clss').val(-1);jQuery('#hf_search').val('');jQuery('#form1').submit();">图片</asp:HyperLink>
+                            </td>
+                            <td style="color: #aaaaaa;">
+
+                                <asp:DataList ID="dlphoto" runat="server" DataSourceID="SqlDataSource2" HorizontalAlign="Center" RepeatColumns="6" RepeatDirection="Horizontal">
+                                    <ItemTemplate>
+                                        <a href="javascript:jQuery('#hf_media').val(1);jQuery('#hf_clss').val(<%# Eval("id") %>);jQuery('#form1').submit();">&nbsp;<asp:Label ID="Label1" runat="server" Text='<%# Eval("kname") %>'></asp:Label>&nbsp;
+                                        </a>
+                                    </ItemTemplate>
+                                    <SeparatorStyle Width="10px" />
+                                </asp:DataList>
+
+                                <asp:SqlDataSource ID="SqlDataSource2" runat="server"
+                                    ConnectionString="<%$ ConnectionStrings:mysql_connectstring %>"
+                                    ProviderName="<%$ ConnectionStrings:mysql_connectstring.ProviderName %>"
+                                    SelectCommand="SELECT id, kname FROM kinds2 WHERE ((isdel = ?) AND (detail_id = ?))">
+                                    <SelectParameters>
+                                        <asp:Parameter DefaultValue="0" Name="isdel" Type="Int32" />
+                                        <asp:Parameter DefaultValue="26" Name="detail_id" Type="Int32" />
+                                    </SelectParameters>
+                                </asp:SqlDataSource>
+
+                            </td>
+                        </tr>
+                        <tr style="height: 10px; background-color: #b1ccd5;">
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align: top; height: 100%;" colspan="2">
+
+                                <asp:MultiView ID="MultiView1" runat="server" ActiveViewIndex="0" OnActiveViewChanged="MultiView1_ActiveViewChanged">
+                                    <asp:View ID="View1" runat="server">
+                                        <asp:GridView ID="gvMovie" runat="server" AutoGenerateColumns="False" DataSourceID="SqlDataSource3" AllowPaging="True" ShowHeader="False" Width="100%" OnDataBinding="gvMovie_DataBinding" OnPageIndexChanging="gvMovie_PageIndexChanging">
+                                            <Columns>
+                                                <asp:TemplateField>
+                                                    <EditItemTemplate>
+                                                        <asp:TextBox ID="TextBox1" runat="server" Text='<%# Bind("mvname") %>'></asp:TextBox>
+                                                    </EditItemTemplate>
+                                                    <ItemTemplate>
+                                                        <table style="width: 100%;">
+                                                            <tr onclick="<%# "javascript:cash_confirm(" + Eval("id").ToString() + ", "+Eval("coin").ToString()+")" %>">
+                                                                <td style="width: 65%; text-align: left; vertical-align: top; padding-left: 10px">
+                                                                    <asp:Label ID="Label1" runat="server" Text='<%# utility.SimplifedStr(Eval("mvname").ToString(), 50) %>' Height="100%" Width="100%"></asp:Label>
+                                                                </td>
+                                                                <td style="width: 7%; text-align: right; vertical-align: bottom; font-size: 30px; font-weight: normal;">
+                                                                    <asp:Image ID="Image2" runat="server" ImageAlign="AbsMiddle" Width="30px" ImageUrl="~/files/image/hart.png" />
+                                                                </td>
+                                                                <td style="width: 10%; text-align: left; vertical-align: bottom; font-size: 30px; font-weight: normal;">
+                                                                    <asp:Label ID="Label5" runat="server" Text='<%# utility.GetInteresting(Eval("hao").ToString(), Eval("bad").ToString()) %>'></asp:Label>
+                                                                </td>
+                                                                <td>
+                                                                    <asp:Image ID="Image1" runat="server" Height="100px" ImageUrl='<%# utility.GetImgSrc("movie", Eval("mvname").ToString(), Eval("pathname").ToString(), Eval("i_url").ToString()) %>' Width="155px" />
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
+                                            </Columns>
+                                            <PagerStyle HorizontalAlign="Center" CssClass="GridPager" />
+                                            <RowStyle Height="120px" />
+                                        </asp:GridView>
+                                        <asp:SqlDataSource ID="SqlDataSource3" runat="server"
+                                            ConnectionString="<%$ ConnectionStrings:mysql_connectstring %>"
+                                            ProviderName="<%$ ConnectionStrings:mysql_connectstring.ProviderName %>"
+                                            SelectCommand="">
+                                            <SelectParameters>
+                                                <asp:Parameter DefaultValue="0" Name="isdel" Type="Int32" />
+                                            </SelectParameters>
+                                        </asp:SqlDataSource>
+                                    </asp:View>
+                                    <asp:View ID="View2" runat="server">
+                                        <asp:GridView ID="gvPhoto" runat="server" AllowPaging="True" AutoGenerateColumns="False" DataSourceID="SqlDataSource4" ShowHeader="False" Width="100%" OnDataBinding="gvPhoto_DataBinding" OnPageIndexChanging="gvPhoto_PageIndexChanging">
+                                            <Columns>
+                                                <asp:TemplateField>
+                                                    <EditItemTemplate>
+                                                        <asp:TextBox ID="TextBox2" runat="server" Text='<%# Bind("ptname") %>'></asp:TextBox>
+                                                    </EditItemTemplate>
+                                                    <ItemTemplate>
+                                                        <table style="width: 100%;">
+                                                            <tr onclick="<%# "javascript:clickimgview(" + Eval("id").ToString() +")" %>">
+                                                                <td style="width: 65%; text-align: left; vertical-align: top; padding-left: 10px">
+                                                                    <asp:Label ID="Label6" runat="server" Height="100%" Text='<%# utility.SimplifedStr(Eval("ptname").ToString(), 50) %>' Width="100%"></asp:Label>
+                                                                </td>
+                                                                <td style="width: 7%; text-align: right; vertical-align: bottom; font-size: 30px; font-weight: normal;">
+                                                                    <asp:Image ID="Image3" runat="server" ImageAlign="AbsMiddle" ImageUrl="~/files/image/hart.png" Width="30px" />
+                                                                </td>
+                                                                <td style="width: 10%; text-align: left; vertical-align: bottom; font-size: 30px; font-weight: normal;">
+                                                                    <asp:Label ID="Label7" runat="server" Text='<%# utility.GetInteresting(Eval("hao").ToString(), Eval("bad").ToString()) %>'></asp:Label>
+                                                                </td>
+                                                                <td>
+                                                                    <asp:Image ID="Image4" runat="server" Height="100px" ImageUrl='<%# utility.GetImgSrc("image", Eval("ptname").ToString(), Eval("pathname").ToString(), Eval("p_url").ToString()) %>' Width="155px" />
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
+                                            </Columns>
+                                            <PagerStyle HorizontalAlign="Center" Width="100%" CssClass="GridPager" />
+                                            <RowStyle Height="120px" />
+                                        </asp:GridView>
+                                        <asp:SqlDataSource ID="SqlDataSource4" runat="server" ConnectionString="<%$ ConnectionStrings:mysql_connectstring %>" ProviderName="<%$ ConnectionStrings:mysql_connectstring.ProviderName %>" SelectCommand="">
+                                            <SelectParameters>
+                                                <asp:Parameter DefaultValue="0" Name="isdel" Type="Int32" />
+                                            </SelectParameters>
+                                        </asp:SqlDataSource>
+                                    </asp:View>
+                                </asp:MultiView>
+
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </td>
+        </tr>
+    </table>
+    <!--{Alert Confirm Dialog-->
+    <style type="text/css">
+        .ConfirmAlert {
+            width: 500px;
+            height: 300px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin: -150px 0 0 -250px;
+        }
+
+        .round-button {
+            -webkit-border-radius: 7px;
+        }
+    </style>
+    <div class="ConfirmAlert round-button" style="display: none; border-width: 1px; background-color: #FFFFFF; padding: 5px;">
+        <table class="round-button" style="border: 1px solid #9FCDA9; width: 100%; position: relative; height: 100%; background-color: #FFFCEB; padding: 0px;">
+            <tr>
+                <td colspan="3" style="background-color: #EB5A3D; text-align: center; font-weight: bold; color: #FFFFFF; -webkit-border-radius: 7px;">观看收费内容</td>
+            </tr>
+            <tr>
+                <td rowspan="2" style="text-align: center;">
+                    <img alt="" src="/files/image/cash_confirm.png" /></td>
+                <td colspan="2" style="text-align: center;"><strong>继续观看收费内容<br />
+                    需支付对应元宝</strong></td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">
+                    <input id="btnYes" class="round-button" type="button" value="YES" style="width: 90px; height: 60px; background-color: #356372; color: #FFFFFF;" /></td>
+                <td style="text-align: center;">
+                    <input id="btnNo" class="round-button" type="button" value="NO" style="width: 68px; height: 60px; background-color: #316271; color: #FFFFFF;" /></td>
+            </tr>
+        </table>
+    </div>
+    <script>
+        //REFME
+        //jQuery("#Button1").click(function () {
+        //    var IsOn = jQuery(".ConfirmAlert").css("display");
+        //    if (IsOn == "none") jQuery(".ConfirmAlert").css("display", "block");
+        //    else jQuery(".ConfirmAlert").css("display", "none");
+        //});
+        function cash_confirm(id, coin) {
+            movie_id = id;
+            if (eval(coin) > 0) {
+                jQuery(".ConfirmAlert").css("display", "block");
+            }
+            else clickimg(movie_id);
+        }
+
+        jQuery("#btnYes").click(function () {
+            //insert Code;
+            clickimg(movie_id);
+        });
+        jQuery("#btnNo").click(function () {
+            jQuery(".ConfirmAlert").css("display", "none");
+        });
+    </script>
+    <!--}Alert Confirm Dialog-->
+
+    <!--{Search Dialog------------------------------------------------------------------------>
+    <div id="SearchDialog" class="modal" style="display: none;">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <table class="round-button" style="width: 100%; height: 100%; background-color: #434343">
+                <tr>
+                    <td>
+                        <img alt="" src="/files/image/search_mark1.png" style="padding-left: 30px; width: 100px" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table style="width: 90%; margin: 0 auto" align="center">
+                            <tr>
+                                <td style="width: 70%">
+                                    <input id="txtSearch" type="text" style="width: 100%; height: 70px" />
+                                </td>
+                                <td style="width: 30%; font-size: 30px">
+                                    <select id="selType" style="width: 100%; height: 70px">
+                                        <option value="0">视频</option>
+                                        <option value="1">图片</option>
+                                    </select>
+                                </td>
+                                <td style="width: 10%">
+                                    <img id="btnSearch" class="close" alt="" src="/files/image/search_btn.png" style="height: 100%;" />
+                                </td>
+                            </tr>
+                        </table>
+
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+    <style>
+        /* The Modal (background) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        /* Modal Content */
+        .modal-content {
+            padding: 20px;
+            border: 1px solid #888;
+            width: 70%;
+            height: 200px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin: -100px 0 0 -35%;
+            border-width: 1px;
+            background-color: #FFFFFF;
+            padding: 5px;
+        }
+
+        /* The Close Button */
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+            .close:hover,
+            .close:focus {
+                color: #000;
+                text-decoration: none;
+                cursor: pointer;
+            }
+    </style>
+    <script>
+
+        var dlg = document.getElementById('SearchDialog');// Get the modal
+        var doSearch = document.getElementsByClassName("close")[0];// Get the <span> element that closes the modal
+
+        function SearchDialog() {// When the user clicks the button, open the modal
+            jQuery("#SearchDialog").css("display", "block");
+            jQuery("#txtSearch").focus();
+        }
+
+        doSearch.onclick = function () {// When the user clicks on <span> (x), close the modal
+            dlg.style.display = "none";
+
+            jQuery('#hf_media').val(jQuery('#selType').val());
+            jQuery("#hf_search").val(jQuery('#txtSearch').val());
+            jQuery('#hf_filter').val(4);
+            jQuery('#form1').submit();
+        }
+
+        jQuery(window).click(function (event) {// When the user clicks anywhere outside of the modal, close it
+            if (event.target == dlg) {
+                dlg.style.display = "none";
+            }
+        });
+    </script>
+    <!--}Search Dialog------------------------------------------------------------------------>
+</body>
+</html>
+<script>
+    function clickimg(id) {
+        var param = "type=movie&id=" + id;
+        PostAjax("/Ajax/rcnt_update.ashx", param);
+
+        location.href = '/media/mobile/mplay.aspx?id=' + id;
+    }
+    function clickimgview(id)
+    {
+        var param = "type=image&id=" + id;
+        PostAjax("/Ajax/rcnt_update.ashx", param);
+
+        location.href="/media/mobile/ptview.aspx?id=" + id;
+    }
+</script>
+<script>
+    /* When the user clicks on the button,
+    toggle between hiding and showing the dropdown content */
+    function myFunction() {
+        document.getElementById("myDropdown").classList.toggle("show");
+    }
+
+    // Close the dropdown if the user clicks outside of it
+    window.onclick = function (event) {
+        if (!event.target.matches('.dropbtn')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
+
+    var noticetext = PostAjax("/Ajax/media_notice.ashx", "");
+    jQuery("#notice").text(noticetext);
+</script>

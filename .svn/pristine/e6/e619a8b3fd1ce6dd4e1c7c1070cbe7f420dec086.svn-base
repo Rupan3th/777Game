@@ -1,0 +1,68 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="wowza_live.aspx.cs" Inherits="_777Game_wowza_live" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+    <meta charset="utf-8" />    
+    <script type="text/javascript" src="//player.wowza.com/player/latest/wowzaplayer.min.js"></script> 
+    <style type="text/css">
+        body {
+            margin-left: 0px;
+            margin-top: 0px;
+            margin-right: 0px;
+            margin-bottom: 0px;
+        }
+    </style>
+    <script>
+        function doubleSize(e, obj) {
+            var width_D = parseInt(obj.style.width) * 2;
+            var height_D = parseInt(obj.style.height) * 2;
+            if (width_D > 888) {
+                width_D = 222;
+                height_D = 232               
+            }
+            obj.style.width = width_D + "px";
+            obj.style.height = height_D + "px";
+
+            document.body.scrollIntoView(true);
+            parent.document.all.livestreaming.height = document.body.scrollHeight;
+            parent.document.all.livestreaming.width = document.body.scrollWidth;
+            parent.document.all.livestreaming.left = 100;
+        }
+    </script>
+    
+
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div id='wowza_player' style='width: 222px; height: 232px; left: 0px; top: 0px;' ondblclick="doubleSize(event, this)"></div>
+    <%--<script id='player_embed' src='//player.cloud.wowza.com/hosted/7bb0rth1/wowza.js' type='text/javascript'></script>--%>
+    
+    <script>
+        var strem_player = WowzaPlayer.create('wowza_player',
+                         {
+                             "license": "PLAY1-aaTQP-Nnbb7-Q3d8z-tYNbm-6ajk8",                             
+                             "description": "",
+                             "sourceURL": "http://36.49.152.197:1935/mylive/stream/playlist.m3u8",
+                             //"sourceURL": "http://103.249.107.127:1935/myvod/_definst_/volvo/mp4:volvo.mp4/playlist.m3u8",
+                             "autoPlay": true,
+                             "volume": "75",
+                             "mute": false,
+                             "loop": false,
+                             "audioOnly": false,
+                             "uiShowQuickRewind": true,
+                             "uiQuickRewindSeconds": "30"
+                         }
+                     );
+    </script>
+        
+    </form>
+</body>
+</html>
+<script>
+    document.body.scrollIntoView(true);   
+    parent.document.all.livestreaming.height = document.body.scrollHeight;
+    parent.document.all.livestreaming.width = document.body.scrollWidth;
+</script> 

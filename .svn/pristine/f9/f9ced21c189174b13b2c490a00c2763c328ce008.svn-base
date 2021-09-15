@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Javascript Phaser App</title>
+    <link rel="stylesheet" href="app.css" type="text/css" />
+    <script src="node_modules/phaser/dist/phaser.js"></script>
+    <script src="app.js"></script>
+    <script src="boot.js"></script>
+    <script src="preloader.js"></script>
+    <script src="mainmenu.js"></script>
+    <script src="prefabs/player.js"></script>
+    <script src="level1.js"></script>
+    <script src="level2.js"></script>
+    <script src="gameover.js"></script>
+    <script src="../files/js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="//player.wowza.com/player/latest/wowzaplayer.min.js"></script>
+
+</head>
+<body>
+    <!-- Make Sure to install the Javscript Phaser Project Template in order to build Javascript Phaser app in Viusual Studio:
+    https://github.com/funzeye/Phaser-Project-Template-Javascript -->
+    <div id="streamplay" style="width:720px;height:400px;z-index:102;left:0px;top:0px; cursor:pointer; cursor:hand" onmousedown="startDrag(event, this)" ondblclick="doubleSize(event, this)">
+        <script>
+           WowzaPlayer.create('streamplay',
+                {
+                    "license": "PLAY1-aaTQP-Nnbb7-Q3d8z-tYNbm-6ajk8",
+                    "title": "testing",
+                    "description": "",
+                    "sourceURL": "http://103.249.107.127:1935/live/testing/playlist.m3u8",
+                    //"sourceURL": "http://192.168.1.105:1935/demolive/testing/playlist.m3u8",
+                    //"sourceURL": "http://103.249.107.127:1935/myvod/_definst_/volvo/mp4:volvo.mp4/playlist.m3u8",
+                    "autoPlay": true,
+                    "volume": "75",
+                    "mute": false,
+                    "loop": false,
+                    "audioOnly": false,
+                    "uiShowQuickRewind": true,
+                    "uiQuickRewindSeconds": "30"
+                }
+            );
+        </script>
+    </div>   
+
+    <div id="content"></div>
+
+    <div id="bet_area" style="position:absolute;width:720px;height:650px;z-index:102;left:10px;top:480px; background-color:beige; opacity:0.8 ">
+        <div id="bet_btn_area">
+            <image id='display1' width='84' height='30' src="img/disp_1.png" style="position:absolute;left:80px; top:85px"/>
+            <image id='display2' width='84' height='30' src="img/disp_1.png" style="position:absolute;left:200px; top:85px" />
+            <image id='display3' width='84' height='30' src="img/disp_1.png" style="position:absolute;left:320px; top:85px" />
+            <image id='display4' width='84' height='30' src="img/disp_1.png" style="position:absolute;left:440px; top:85px" />
+            <image id='btn_bar' width='92' height='92' src="img/btn_bar.png" style="position:absolute;left:75px; top:120px" />
+            <image id='btn_seven' width='92' height='92' src="img/btn_seven.png" style="position:absolute;left:195px; top:120px" />
+            <image id='btn_star' width='92' height='92' src="img/btn_star.png" style="position:absolute;left:315px; top:120px" />
+            <image id='btn_watermelon' width='92' height='92' src="img/btn_watermelon.png" style="position:absolute;left:435px; top:120px" />
+            <image id='display1' width='84' height='35' src="img/disp_2.png" style="position:absolute;left:80px; top:215px" />
+            <image id='display2' width='84' height='35' src="img/disp_2.png" style="position:absolute;left:200px; top:215px" />
+            <image id='display3' width='84' height='35' src="img/disp_2.png" style="position:absolute;left:320px; top:215px" />
+            <image id='display4' width='84' height='35' src="img/disp_2.png" style="position:absolute;left:440px; top:215px" />
+
+            <image id='display1' width='84' height='30' src="img/disp_1.png" style="position:absolute;left:80px; top:270px" />
+            <image id='display2' width='84' height='30' src="img/disp_1.png" style="position:absolute;left:200px; top:270px" />
+            <image id='display3' width='84' height='30' src="img/disp_1.png" style="position:absolute;left:320px; top:270px" />
+            <image id='display4' width='84' height='30' src="img/disp_1.png" style="position:absolute;left:440px; top:270px" />
+            <image id='btn_bar' width='92' height='92' src="img/btn_bar.png" style="position:absolute;left:75px; top:305px" />
+            <image id='btn_seven' width='92' height='92' src="img/btn_seven.png" style="position:absolute;left:195px; top:305px" />
+            <image id='btn_star' width='92' height='92' src="img/btn_star.png" style="position:absolute;left:315px; top:305px" />
+            <image id='btn_watermelon' width='92' height='92' src="img/btn_watermelon.png" style="position:absolute;left:435px; top:305px" />
+            <image id='display1' width='84' height='35' src="img/disp_2.png" style="position:absolute;left:80px; top:400px" />
+            <image id='display2' width='84' height='35' src="img/disp_2.png" style="position:absolute;left:200px; top:400px" />
+            <image id='display3' width='84' height='35' src="img/disp_2.png" style="position:absolute;left:320px; top:400px" />
+            <image id='display4' width='84' height='35' src="img/disp_2.png" style="position:absolute;left:440px; top:400px" />
+
+            <image id='display1' width='84' height='30' src="img/disp_1.png" style="position:absolute;left:80px; top:455px" />
+            <image id='display2' width='84' height='30' src="img/disp_1.png" style="position:absolute;left:200px; top:455px" />
+            <image id='display3' width='84' height='30' src="img/disp_1.png" style="position:absolute;left:320px; top:455px" />
+            <image id='display4' width='84' height='30' src="img/disp_1.png" style="position:absolute;left:440px; top:455px" />
+            <image id='btn_bar' width='92' height='92' src="img/btn_bar.png" style="position:absolute;left:75px; top:490px" />
+            <image id='btn_seven' width='92' height='92' src="img/btn_seven.png" style="position:absolute;left:195px; top:490px" />
+            <image id='btn_star' width='92' height='92' src="img/btn_star.png" style="position:absolute;left:315px; top:490px" />
+            <image id='btn_watermelon' width='92' height='92' src="img/btn_watermelon.png" style="position:absolute;left:435px; top:490px" />
+            <image id='display1' width='84' height='35' src="img/disp_2.png" style="position:absolute;left:80px; top:585px" />
+            <image id='display2' width='84' height='35' src="img/disp_2.png" style="position:absolute;left:200px; top:585px" />
+            <image id='display3' width='84' height='35' src="img/disp_2.png" style="position:absolute;left:320px; top:585px" />
+            <image id='display4' width='84' height='35' src="img/disp_2.png" style="position:absolute;left:440px; top:585px" />
+
+            <image id='1chip' width='80' height='80' src="img/1chip.png" style="position:absolute;left:560px; top:80px" />
+            <image id='10chip' width='80' height='80' src="img/10chip.png" style="position:absolute;left:560px; top:165px" />
+            <image id='100chip' width='80' height='80' src="img/100chip.png" style="position:absolute;left:560px; top:250px" />
+            <image id='1000chip' width='80' height='80' src="img/1000chip.png" style="position:absolute;left:560px; top:335px" />
+
+            <image id='bet_def' width='90' height='85' src="img/bet_def.png" style="position:absolute;left:555px; top:440px" />
+            <image id='bet_init' width='90' height='85' src="img/bet_init.png" style="position:absolute;left:555px; top:535px" />           
+        </div>   
+        <div id="slot_machine_log" style="width:720px; height:60px; position: absolute; left:0px; top:10px; background-color:blueviolet ">
+            <ul id='slot_log' class='slot_log' style="width:720px; height:60px; overflow-x:hidden"></ul>
+        </div>
+        <div id="dice_log1" style="width:45px; height:545px; position: absolute; left:5px; top:80px; background-color:blueviolet ">
+            <ul id='diceTai_log' class='diceTai_log' style="width:45px; height:545px; overflow-y:hidden"></ul>
+        </div>
+        <div id="dice_log2" style="width:45px; height:545px; position: absolute; left:665px; top:80px; background-color:blueviolet ">
+            <ul id='diceodd_log' class='diceodd_log' style="width:45px; height:545px; overflow-y:hidden"></ul>
+        </div>    
+    </div>
+</body>
+</html>

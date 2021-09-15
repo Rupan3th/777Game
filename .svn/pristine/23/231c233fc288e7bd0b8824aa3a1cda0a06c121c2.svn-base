@@ -1,0 +1,14 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+/// <summary>
+/// Summary description for global
+/// </summary>
+public class global
+{
+    static public String sChatServer = "rtmp://192.168.1.100/textchat";//URI to chat server.
+    static public Hashtable wowChatObjs = new Hashtable();    
+}

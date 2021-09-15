@@ -1,0 +1,33 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="sample.aspx.cs" Inherits="_777Game_mobile_sample" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+    <script src="node_modules/phaser/dist/phaser.js"></script>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div>
+    <script>
+        var game = new Phaser.Game(0, 0, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update});
+
+        function preload() {
+            game.load.audio('boden', ['assets/music/bet.mp3']);
+        }
+        var music;
+
+        function create() {
+            music = game.add.audio('boden');
+            music.play();
+        }
+        function update() {            
+        }
+    </script>
+
+
+    </div>
+    </form>
+</body>
+</html>

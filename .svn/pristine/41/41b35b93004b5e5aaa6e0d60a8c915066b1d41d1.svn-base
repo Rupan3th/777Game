@@ -1,0 +1,29 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Web;
+
+/// <summary>
+/// Summary description for global
+/// </summary>
+public class global
+{
+#if false//Deploy
+    static public string mWowzaVodUrl = "http://103.249.107.127:1935/myvod/_definst_/";//coresponding at "Z:\Workstation\777_project\MSvr\upload\files\movie"
+    static public string mMultiUploadUrl = "http://103.249.107.127:999/api/FileUpload";
+    static public string mDownloadUrl = "http://103.249.107.127:999/api/Dload";
+    static public String sChatServer = "rtmp://103.249.107.127/textchat";//URI to chat server.
+    static public String sJspServer = "http://103.249.107.127:8080/bettingproj/betting/logout.jsp";
+#else
+    static public string mWowzaVodUrl = "http://192.168.1.105:1935/myvod/_definst_/";//coresponding at "Z:\Workstation\777_project\MSvr\upload\files\movie"
+    static public string mMultiUploadUrl = "http://192.168.1.105:999/api/FileUpload";
+    static public string mDownloadUrl = "http://192.168.1.105:999/api/Dload";
+    static public String sChatServer = "rtmp://192.168.1.105/textchat";//URI to chat server.
+    static public String sJspServer = "http://192.168.1.108:8080/bettingproj/betting/logout.jsp";
+#endif
+    static public Hashtable wowChatObjs = new Hashtable();
+    static public Hashtable wowHotChatUsers = new Hashtable();
+    public static HttpClient mclient = new HttpClient();
+}

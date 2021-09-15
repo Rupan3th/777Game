@@ -1,0 +1,125 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+public partial class media_mplay : System.Web.UI.Page
+{
+    mysql msql = new mysql();
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (Request["id"] != null)
+        {
+            lblSubject.Text = GetSubject(Request["id"].ToString());
+            lblBefore.Text = GetBefore(Request["id"].ToString());
+            lblAmount.Text = GetAmount(Request["id"].ToString());
+        }
+    }
+
+    string GetSubject(string id)
+    {
+        string strtitle = "";
+        msql.GetValue("select mvname from movie where id=" + id, out strtitle);
+        return strtitle;
+    }
+
+    string GetVUrl(string id)
+    {
+        string strvurl = "";
+        msql.GetValue("select v_url from movie where id=" + id, out strvurl);
+        return strvurl;
+    }
+    string GetAmount(string id)
+    {
+        string strCalls = "";
+        msql.GetValue("select rcnt from movie where id=" + id, out strCalls);
+        return strCalls;
+    }
+
+    string GetBefore(string id)
+    {
+        String strDate = "";
+        msql.GetValue("select regdate from movie where id=" + id, out strDate);
+        strDate = utility.GetDateFormNow(strDate);
+        return strDate;
+    }
+
+    float fWidth = 140f;
+    public Unit GetHaoWidth(string strHao, String strBad)
+    {
+        int nHao = int.Parse(strHao);
+        int nBad = int.Parse(strBad);
+        if (nHao == 0 && nBad == 0) return 0;
+        float fIntval = fWidth / (float)(nHao + nBad);
+
+        return (int)(fIntval * nHao);
+    }
+
+    public Unit GetBadWidth(string strHao, String strBad)
+    {
+        int nHao = int.Parse(strHao);
+        int nBad = int.Parse(strBad);
+        if (nHao == 0 && nBad == 0) return 0;
+        float fIntval = fWidth / (float)(nHao + nBad);
+
+        return (int)(fIntval * nBad);
+    }
+
+    protected void imgHao_Click(object sender, ImageClickEventArgs e)
+    {
+        if (Request["id"] == null) return;
+        msql.Execute("Update movie set hao=hao+1 where id=" + Request["id"].ToString());
+        FormView1.DataBind();
+    }
+
+    protected void imgBad_Click(object sender, ImageClickEventArgs e)
+    {
+        if (Request["id"] == null) return;
+        msql.Execute("Update movie set bad=bad+1 where id=" + Request["id"].ToString());
+        FormView1.DataBind();
+    }
+
+    protected void btnDownload_Click(object sender, EventArgs e)
+    {
+        if (Request["id"] == null) return;
+
+        String strSubject = GetSubject(Request["id"].ToString());
+        String strVUrl = GetVUrl(Request["id"].ToString());
+        String strDownload = global.mDownloadUrl + "/?filename=" +Uri.EscapeDataString(strSubject + "/" + strVUrl);
+
+        Response.Redirect(strDownload);
+    }
+
+    public void PlacePlayer()
+    {
+        if (Request["id"] == null)
+        {
+            Response.Write("");
+            return;
+        }
+        String strSubject = GetSubject(Request["id"].ToString());
+        String strVUrl = GetVUrl(Request["id"].ToString());
+
+        string strPlayerTag = @"<script type='text/javascript'>
+                                        WowzaPlayer.create('playerElement',
+                                            {
+                                                'license': 'PLAY1-aaTQP-Nnbb7-Q3d8z-tYNbm-6ajk8',
+                                                'title': 'Demo',
+                                                'description': 'Demo',
+                                                'sourceURL': 'http://192.168.1.101:1935/myvod/_definst_/"+ strSubject + "/mp4:"+ strVUrl + @"/playlist.m3u8',
+                                                'autoPlay': false,
+                                                'volume': '75',
+                                                'mute': false,
+                                                'loop': false,
+                                                'audioOnly': false,
+                                                'uiShowQuickRewind': true,
+                                                'uiQuickRewindSeconds': '30'
+                                            }
+                                        );
+                                    </script>";
+
+        Response.Write(strPlayerTag);
+    }
+}

@@ -1,0 +1,118 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+public partial class media_mobile_Default : System.Web.UI.Page
+{
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if( Request["hf_media"] != null )
+        {
+            string strmedia = Request["hf_media"].ToString();
+            if( strmedia.CompareTo("1") == 0 )
+                MultiView1.ActiveViewIndex = 1;//Photo
+            else
+                MultiView1.ActiveViewIndex = 0;//Movie
+        }
+
+        if (MultiView1.ActiveViewIndex == 0) gvMovie.DataBind();
+        else gvPhoto.DataBind();
+    }
+
+    protected void gvMovie_DataBinding(object sender, EventArgs e)
+    {
+        ConfigMovieSql();
+    }
+
+    protected void gvMovie_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    {
+        ConfigMovieSql();
+    }
+
+    public void ConfigMovieSql()
+    {
+        string sqlsel = "SELECT id, mvname, pathname, i_url, v_url, coin, clss_id, hao, bad, rcnt FROM movie";
+        string sqlwhere = " WHERE (isdel = 0)";
+        string sqlorder = " ORDER BY regdate DESC";
+
+        string strClss = "";
+        if( Request["hf_clss"] != null )
+        {
+            strClss = Request[ "hf_clss" ].ToString();
+            if(int.Parse( strClss ) > 0 )
+            {
+                sqlwhere += " and clss_id="+ strClss;
+            }
+        }
+
+        string strOrder = "";
+        if (Request["hf_filter"] != null)
+        {
+            strOrder = Request["hf_filter"].ToString();
+            switch(strOrder)
+            {
+                case "0": sqlorder = " ORDER BY hao DESC"; break;//interesting
+                case "1": sqlorder = " ORDER BY hao DESC"; break;//readed
+                case "2": sqlwhere += " and coin=0"; break;//free
+                case "3": sqlwhere += " and coin > 0"; break;//none free
+                case "4": sqlwhere += " and mvname like '%"+ hf_search.Value + "%'"; break;//search
+            }
+        }
+
+        SqlDataSource3.SelectCommand = sqlsel + sqlwhere + sqlorder;
+        utility.log("Movie " + SqlDataSource3.SelectCommand );
+    }
+
+
+    protected void gvPhoto_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    {
+        ConfigPhotoSql();
+    }
+
+    protected void gvPhoto_DataBinding(object sender, EventArgs e)
+    {
+        ConfigPhotoSql();
+    }
+
+    public void ConfigPhotoSql()
+    {
+        string sqlsel = "SELECT id, ptname, pathname, p_url, clss_id, hao, bad, rcnt FROM photo";
+        string sqlwhere = " WHERE (isdel = 0)";
+        string sqlorder = " ORDER BY regdate DESC";
+
+        string strClss = "";
+        if (Request["hf_clss"] != null)
+        {
+            strClss = Request["hf_clss"].ToString();
+            if (int.Parse(strClss) > 0)
+            {
+                sqlwhere += " and clss_id=" + strClss;
+            }
+        }
+
+        string strOrder = "";
+        if (Request["hf_filter"] != null)
+        {
+            strOrder = Request["hf_filter"].ToString();
+            switch (strOrder)
+            {
+                case "0": sqlorder = " ORDER BY hao DESC"; break;//interesting
+                case "1": sqlorder = " ORDER BY hao DESC"; break;//readed
+                case "4": sqlwhere += " and ptname like '%" + hf_search.Value + "%'"; break;//search
+            }
+        }
+
+        SqlDataSource4.SelectCommand = sqlsel + sqlwhere + sqlorder;
+
+        utility.log("Photo " + SqlDataSource4.SelectCommand);
+    }
+
+    protected void MultiView1_ActiveViewChanged(object sender, EventArgs e)
+    {
+        if (MultiView1.ActiveViewIndex == 0) gvMovie.DataBind();
+        else gvPhoto.DataBind();
+    }
+}

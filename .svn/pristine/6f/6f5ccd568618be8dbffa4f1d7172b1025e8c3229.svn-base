@@ -1,0 +1,29 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using MySql.Data.MySqlClient;
+
+
+public partial class _777Game_main : System.Web.UI.Page
+{
+  
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        string strRet = "";
+
+        string serverTime = "";
+        int timesec = 0;
+        int regame_time = timesec % 120;
+        int round = timesec / 120 + 1;
+
+        // 라운드 마감시간 20s전 endbox, dice1,2,3 point 생성
+
+        //
+
+        //strRet : 
+        Response.Write(strRet);
+    }        
+}

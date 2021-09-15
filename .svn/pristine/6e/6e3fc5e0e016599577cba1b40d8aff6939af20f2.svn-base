@@ -1,0 +1,80 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.Security;
+using MySql.Data.MySqlClient;
+
+public partial class Ajax_Login : System.Web.UI.Page
+{
+    mysql mconn = new mysql();
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (Request["name"] == null 
+            || Request["pwd"] == null 
+            || Request["vcode"] == null
+            || Session["webcheckcode"] == null ) return;
+
+        string username = this.Request["name"].ToString();
+        username = utility.ClearTaom(username);
+        string pwd =  utility.CreateMD5(this.Request["pwd"].ToString());        
+        string strVode = this.Request["vcode"];
+
+        if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(pwd))//check if empty or null
+            this.Write("-1");
+        else if (strVode.ToUpper() != this.Session["webcheckcode"].ToString())//check verify code.
+        {
+            this.Write("-2");
+        }
+        else
+        {//login proceess
+            String strRole = "user";
+
+            string id, admin_id, rating, coin, regdate, temp_coin, isdel;
+            String sql = "select id, admin_id, rating, coin, regdate, temp_coin, isdel from user where name='" + username + "' and ucase(pass)=ucase('"+pwd+"') and isdel=0";
+            mconn.open();
+            MySqlDataReader reader = mconn.GetReader(sql);
+            if( reader.Read() )
+            {
+                id          = reader["id"].ToString();
+                admin_id    = reader["admin_id"].ToString();
+                rating      = reader["rating"].ToString();
+                coin        = reader["coin"].ToString();
+                regdate     = reader["regdate"].ToString();
+                temp_coin   = reader["temp_coin"].ToString();
+                isdel       = reader["isdel"].ToString();
+                if(rating.CompareTo("999") == 0 || rating.CompareTo("555") == 0)
+                {
+                    Session["User"] = username;
+                    Session["Roles"] = strRole;
+                    FormsAuthentication.SetAuthCookie(username, false);//Let us now set the authentication cookie so that we can use that later.
+
+                    //{{
+                    Session["user_id"]  = id;
+                    Session["admin_id"] = admin_id;
+                    Session["name"]     = username;
+                    Session["rating"]   = rating;
+                    Session["coin"]     = coin;
+                    Session["temp_coin"] = temp_coin;
+                    //}}
+
+                    this.Write("1");
+                }
+                else this.Write("Unknown login error 2");
+            }
+            else this.Write("Unknown login error 3");
+            reader.Close();
+            mconn.close();
+        }        
+    }
+
+    public void Write(string str)
+    {
+        this.Response.Clear();
+        this.Response.Write(str);
+        this.Response.End();
+    }
+}

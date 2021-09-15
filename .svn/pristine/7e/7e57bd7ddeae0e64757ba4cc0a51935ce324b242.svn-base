@@ -1,0 +1,81 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="engine.aspx.cs" Inherits="_777Game_engine" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>水果老虎机engine</title>
+
+    <style type="text/css">
+        #gametime {
+            width: 35px;
+        }
+    </style>
+
+        
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div>
+        <div>
+            <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>    
+            <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+                <ContentTemplate>
+                    &nbsp;&nbsp;&nbsp; 현재시간 : <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>           
+                    &nbsp;&nbsp;&nbsp; 역계수기 : <asp:TextBox ID="TextBox7" runat="server" Width="38px"></asp:TextBox>     </br>
+                    <p>    
+                        &nbsp;&nbsp;&nbsp; 회 차 : <asp:TextBox ID="TextBox5" runat="server" Width="77px" ></asp:TextBox>   </br></br>
+
+                        &nbsp;&nbsp;&nbsp; 슬롯머신
+                        <asp:TextBox ID="TextBox9" runat="server" Width="23px"></asp:TextBox> 
+                        &nbsp;&nbsp;&nbsp; 라크
+                        <asp:TextBox ID="TextBox13" runat="server" Width="16px"></asp:TextBox>
+                        <asp:TextBox ID="TextBox14" runat="server" Width="16px"></asp:TextBox>
+                        <asp:TextBox ID="TextBox15" runat="server" Width="16px"></asp:TextBox>
+                        <asp:TextBox ID="TextBox16" runat="server" Width="16px"></asp:TextBox></br>
+
+                        &nbsp;&nbsp;&nbsp; 다이사이
+                        <asp:TextBox ID="TextBox10" runat="server" Width="16px"></asp:TextBox>
+                        <asp:TextBox ID="TextBox11" runat="server" Width="16px"></asp:TextBox>
+                        <asp:TextBox ID="TextBox12" runat="server" Width="16px"></asp:TextBox>
+                    </p>
+
+                    <asp:Timer ID="Timer1" runat="server" Interval="1000" 
+                        ontick="Timer1_Tick">
+                    </asp:Timer>
+                </ContentTemplate>
+            </asp:UpdatePanel>
+            <br />    
+        </div>
+
+        <div>
+            <div>
+                ********************* 수동결정 *********************                
+            </div>
+            <div>                
+                Fruit number<asp:TextBox ID="TextBox1" runat="server" text="1" style="margin-left: 40px"></asp:TextBox>
+            </div>
+            <div>    
+                Dice1 point<asp:TextBox ID="TextBox2" runat="server" text="1" style="margin-left: 50px"></asp:TextBox>
+            </div>
+            <div>    
+                Dice2 point<asp:TextBox ID="TextBox3" runat="server" text="1" style="margin-left: 50px"></asp:TextBox>    
+            </div>
+            <div style="height: 27px">    
+                Dice3 point<asp:TextBox ID="TextBox4" runat="server" text="1" style="margin-left: 50px"></asp:TextBox>    
+                <br />    
+            </div>
+        </div>
+        
+        game result value&nbsp;&nbsp;&nbsp;
+        <asp:Button ID="Button2" runat="server" OnClick="Button1_Click" Text=" 결정 " />        
+        <asp:TextBox ID="TextBox8" runat="server" Width="79px" text="0"></asp:TextBox>        
+        회차 게임이 결정되였습니다.
+        <p>
+            결과&nbsp;&nbsp; <asp:TextBox ID="TextBox6" runat="server"></asp:TextBox></br>
+            ****************************************************
+        </p>            
+    </div>
+    </form>
+</body>
+</html>

@@ -1,0 +1,19 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Web;
+
+/// <summary>
+/// Summary description for global
+/// </summary>
+public class global
+{
+    static public string mMultiUploadUrl = "http://localhost:62157/api/FileUpload";
+    static public string mDownloadUrl = "http://localhost:62157/api/Dload";
+    static public String sChatServer = "rtmp://192.168.1.101/textchat";//URI to chat server.
+    static public String sJspServer = "http://192.168.1.108:8080/bettingproj/betting/logout.jsp";
+    static public Hashtable wowChatObjs = new Hashtable();
+    public static HttpClient mclient = new HttpClient();
+}

@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html>
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <title>Slotmachine</title>
+
+    <script src="../files/js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="//player.wowza.com/player/latest/wowzaplayer.min.js"></script>
+</head>
+    <body>
+        <div id="streamplay" style="position:absolute;border:1px #124b40 solid;width:222px;height:232px;z-index:102;left:595px;top:202px; cursor:pointer; cursor:hand" onmousedown="startDrag(event, this)" ondblclick="doubleSize(event, this)" >
+            <%--<image id='adv' width='222' height='232' src="../files/image/images/publish_bkg.png"/>--%>
+           <script>
+           WowzaPlayer.create('streamplay',
+                {
+                    "license": "PLAY1-aaTQP-Nnbb7-Q3d8z-tYNbm-6ajk8",
+                    "title": "testing",
+                    "description": "",
+                    "sourceURL": "http://103.249.107.127:1935/live/testing/playlist.m3u8",
+                    //"sourceURL": "http://192.168.1.105:1935/demolive/testing/playlist.m3u8",
+                    //"sourceURL": "http://103.249.107.127:1935/myvod/_definst_/volvo/mp4:volvo.mp4/playlist.m3u8",
+                    "autoPlay": true,
+                    "volume": "75",
+                    "mute": false,
+                    "loop": false,
+                    "audioOnly": false,
+                    "uiShowQuickRewind": true,
+                    "uiQuickRewindSeconds": "30"
+                }
+            );
+           </script>
+        </div>
+
+        <!--<script type="text/javascript" src="cordova.js"></script>-->
+        <script type="text/javascript" src="js/phaser.min.js"></script>
+        <script type="text/javascript" src="js/Slot/Boot.js"></script>
+        <script type="text/javascript" src="js/Slot/Preloader.js"></script>
+        <script type="text/javascript" src="js/Slot/Game.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+    </body>
+</html>

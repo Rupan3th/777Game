@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Javascript Phaser App</title>
+    <link rel="stylesheet" href="app.css" type="text/css" />
+    <script src="node_modules/phaser/dist/phaser.js"></script>
+    <script src="app.js"></script>
+    <script src="boot.js"></script>
+    <script src="preloader.js"></script>
+    <script src="mainmenu.js"></script>
+    <script src="prefabs/player.js"></script>
+    <script src="level1.js"></script>
+    <script src="level2.js"></script>
+    <script src="gameover.js"></script>
+    <script src="../files/js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="//player.wowza.com/player/latest/wowzaplayer.min.js"></script>
+
+</head>
+<body>
+    <!-- Make Sure to install the Javscript Phaser Project Template in order to build Javascript Phaser app in Viusual Studio:
+    https://github.com/funzeye/Phaser-Project-Template-Javascript -->
+    <div id="streamplay" style="border:1px #124b40 solid;width:640px;height:430px;z-index:102;left:0px;top:50px; cursor:pointer; cursor:hand" onmousedown="startDrag(event, this)" ondblclick="doubleSize(event, this)">
+        <%--<image id='adv' width='600' height='400' src="../files/image/images/publish_bkg.png" />--%>
+        <script>
+           WowzaPlayer.create('streamplay',
+                {
+                    "license": "PLAY1-aaTQP-Nnbb7-Q3d8z-tYNbm-6ajk8",
+                    "title": "testing",
+                    "description": "",
+                    "sourceURL": "http://103.249.107.127:1935/live/testing/playlist.m3u8",
+                    //"sourceURL": "http://192.168.1.105:1935/demolive/testing/playlist.m3u8",
+                    //"sourceURL": "http://103.249.107.127:1935/myvod/_definst_/volvo/mp4:volvo.mp4/playlist.m3u8",
+                    "autoPlay": true,
+                    "volume": "75",
+                    "mute": false,
+                    "loop": false,
+                    "audioOnly": false,
+                    "uiShowQuickRewind": true,
+                    "uiQuickRewindSeconds": "30"
+                }
+            );
+        </script>
+    </div>   
+
+    <div id="content"></div>
+</body>
+</html>
